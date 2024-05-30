@@ -25,7 +25,7 @@ filme_service = FilmeService()
 def index():
 
     filmes = filme_service.list_filmes()
-    app.logger.info('Obtendo a lista de filmes no MongoDB')      
+    app.logger.info('Obtendo a lista de filmes no Postgres')      
     sliders = sorted(filmes, key=lambda x: len(x.reviews), reverse=False)
     sliders = sliders[-3:]
     return render_template('index.html', filmes=filmes, sliders=sliders)

@@ -1,11 +1,24 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Rotten_Potatoes.Api.Entity;
-using System.Configuration;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load environment variables and build the connection string
+var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+var database = Environment.GetEnvironmentVariable("POSTGRES_DB");
+var username = Environment.GetEnvironmentVariable("POSTGRES_USER");
+var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+
+if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+{
+    throw new InvalidOperationException("Database configuration is missing environment variables");
+}
+
+var connectionString = $"Host={host};Database={database};Username={username};Password={password}";
+
+// Register services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "AllowAll",
@@ -18,7 +31,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllers();
