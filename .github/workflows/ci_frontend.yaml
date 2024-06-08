@@ -26,3 +26,18 @@ jobs:
           context: ./front
           push: true
           tags: paulofponciano/rotten-potatoes-web:${{ github.sha }}, paulofponciano/rotten-potatoes-web:latest
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/paulofponciano/rotten-potatoes-web:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
