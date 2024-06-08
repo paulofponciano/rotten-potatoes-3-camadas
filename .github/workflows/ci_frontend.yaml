@@ -20,17 +20,18 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build image and push to docker hub
+      - name: Build image for trivy scan
         uses: docker/build-push-action@v5
         with: 
           context: ./front
           push: false
-          tags: paulofponciano/rotten-potatoes-web:${{ github.sha }}, paulofponciano/rotten-potatoes-web:latest
+          load: true
+          tags: paulofponciano/rotten-potatoes-web:trivy-scan
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'docker.io/paulofponciano/rotten-potatoes-web:${{ github.sha }}'
+          image-ref: 'docker.io/paulofponciano/rotten-potatoes-web:trivy-scan'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -41,3 +42,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Build image and push to docker hub
+        uses: docker/build-push-action@v5
+        with: 
+          context: ./front
+          push: true
+          tags: paulofponciano/rotten-potatoes-web:${{ github.sha }}, paulofponciano/rotten-potatoes-web:latest
