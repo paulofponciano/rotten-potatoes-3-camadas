@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v5
         with: 
           context: ./front
-          push: true
+          push: false
           tags: paulofponciano/rotten-potatoes-web:${{ github.sha }}, paulofponciano/rotten-potatoes-web:latest
 
       - name: Run Trivy vulnerability scanner
