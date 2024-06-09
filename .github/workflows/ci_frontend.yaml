@@ -6,6 +6,7 @@ on:
       - 'k8s/**'
       - 'imgs/**'
       - 'backend/**'
+      - '.github/workflows/ci_backend.yaml'
 jobs: 
   build: 
     name: Build
