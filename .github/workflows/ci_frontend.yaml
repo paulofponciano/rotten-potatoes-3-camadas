@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build image for trivy scan
+      - name: Pre-Build image for trivy scan
         uses: docker/build-push-action@v5
         with: 
           context: ./front
