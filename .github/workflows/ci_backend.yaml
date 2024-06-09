@@ -23,7 +23,7 @@ jobs:
       - name: Pre-Build image for trivy scan
         uses: docker/build-push-action@v5
         with: 
-          context: ./Rotten-Potatoes/Rotten-Potatoes.Api
+          context: ./backend/Rotten-Potatoes/Rotten-Potatoes.Api
           push: false
           load: true
           tags: paulofponciano/rotten-potatoes-api:trivy-scan
@@ -47,6 +47,6 @@ jobs:
       - name: Build image and push to docker hub
         uses: docker/build-push-action@v5
         with: 
-          context: ./Rotten-Potatoes/Rotten-Potatoes.Api
+          context: ./backend/Rotten-Potatoes/Rotten-Potatoes.Api
           push: true
           tags: paulofponciano/rotten-potatoes-api:${{ github.sha }}, paulofponciano/rotten-potatoes-api:latest
