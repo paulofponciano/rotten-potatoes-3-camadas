@@ -32,7 +32,8 @@ jobs:
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'docker.io/paulofponciano/rotten-potatoes-web:trivy-scan'
-          format: 'table'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
           exit-code: '0'
           ignore-unfixed: true
           #vuln-type: 'os,library'
