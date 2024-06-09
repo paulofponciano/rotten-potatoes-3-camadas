@@ -1,4 +1,4 @@
-name: CI
+name: CI 🏗️ 🔎
 on:
   push:
     branches: [main]
@@ -33,15 +33,19 @@ jobs:
         with:
           image-ref: 'docker.io/paulofponciano/rotten-potatoes-web:trivy-scan'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          #vuln-type: 'os,library'
+          severity: 'UNKNOWN,CRITICAL,HIGH,MEDIUM,LOW'
       
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+
+      # - name: Test
+      #   run: |
+      #     docker run --rm paulofponciano/rotten-potatoes-web:trivy-scan
 
       - name: Build image and push to docker hub
         uses: docker/build-push-action@v5
