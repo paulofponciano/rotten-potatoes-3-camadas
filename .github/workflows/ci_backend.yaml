@@ -7,6 +7,7 @@ on:
       - 'imgs/**'
       - 'front/**'
       - '.github/workflows/ci_frontend.yaml'
+      - 'README.md'
 jobs: 
   build: 
     name: Build
