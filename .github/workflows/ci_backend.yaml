@@ -1,0 +1,52 @@
+name: CI Backend 🏗️ 🔎
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'k8s/**'
+      - 'imgs/**'
+      - 'front/**'
+jobs: 
+  build: 
+    name: Build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout 
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Pre-Build image for trivy scan
+        uses: docker/build-push-action@v5
+        with: 
+          context: ./Rotten-Potatoes/Rotten-Potatoes.Api
+          push: false
+          load: true
+          tags: paulofponciano/rotten-potatoes-api:trivy-scan
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/paulofponciano/rotten-potatoes-api:trivy-scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          #vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Build image and push to docker hub
+        uses: docker/build-push-action@v5
+        with: 
+          context: ./Rotten-Potatoes/Rotten-Potatoes.Api
+          push: true
+          tags: paulofponciano/rotten-potatoes-api:${{ github.sha }}, paulofponciano/rotten-potatoes-api:latest
