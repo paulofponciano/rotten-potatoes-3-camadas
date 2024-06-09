@@ -25,7 +25,7 @@ jobs:
         uses: docker/build-push-action@v5
         with: 
           context: ./backend/Rotten-Potatoes
-          file: Rotten-Potatoes.Api/Dockerfile
+          file: ./backend/Rotten-Potatoes/Rotten-Potatoes.Api/Dockerfile
           push: false
           load: true
           tags: paulofponciano/rotten-potatoes-api:trivy-scan
@@ -50,6 +50,6 @@ jobs:
         uses: docker/build-push-action@v5
         with: 
           context: ./backend/Rotten-Potatoes
-          file: Rotten-Potatoes.Api/Dockerfile
+          file: ./backend/Rotten-Potatoes/Rotten-Potatoes.Api/Dockerfile
           push: true
           tags: paulofponciano/rotten-potatoes-api:${{ github.sha }}, paulofponciano/rotten-potatoes-api:latest
